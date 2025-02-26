@@ -1,0 +1,293 @@
+/* 🔴🔵 Thème Rouge & Bleu */
+
+/* 🔹 Changer le fond de la page */
+body {
+    background: linear-gradient(135deg, #007bff, #dc3545); /* Dégradé Bleu 🔵 → Rouge 🔴 */
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 🔹 Centrer le conteneur */
+.container {
+    margin-top: 0;
+}
+
+/* 🔹 Carte avec bordure et ombre */
+.card {
+    border-radius: 10px;
+    background: #ffffff;
+    border: 3px solid #dc3545; /* Rouge */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+}
+
+/* 🔹 Titre */
+.card h2 {
+    font-weight: bold;
+    color: #dc3545; /* Rouge */
+    text-transform: uppercase;
+}
+
+/* 🔹 Champs de formulaire */
+.form-control {
+    border-radius: 5px;
+    border: 2px solid #007bff; /* Bleu */
+    padding: 10px;
+    font-size: 16px;
+}
+
+/* 🔹 Boutons */
+.btn-primary {
+    background-color: #dc3545; /* Rouge */
+    border: none;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    transition: 0.3s ease-in-out;
+    border-radius: 5px;
+}
+
+.btn-primary:hover {
+    background-color: #c82333; /* Rouge plus foncé */
+}
+
+/* 🔹 Liens */
+a {
+    color: #007bff; /* Bleu */
+    font-weight: bold;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* 🔹 Message d'erreur */
+.alert {
+    text-align: center;
+    display: block;
+    border: 2px solid #dc3545; /* Rouge */
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* 🔹 Ajout d’une animation légère */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: fadeIn 0.5s ease-in-out;
+}
+/* 🌟 Styles spécifiques pour Quiz, Cours et Événements */
+
+/* 🔹 Arrière-plan Rouge & Bleu */
+.quiz-page, .cours-page, .events-page {
+    background: linear-gradient(135deg, #007bff, #dc3545);
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 🔹 Conteneur centré */
+.quiz-page .container, .cours-page .container, .events-page .container {
+    margin-top: 0;
+}
+
+/* 🔹 Carte avec effet d’ombre */
+.quiz-page .card, .cours-page .card, .events-page .card {
+    border-radius: 10px;
+    background: #ffffff;
+    border: none;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* 🔹 Titres */
+.quiz-page h2, .cours-page h2, .events-page h2 {
+    color: #dc3545; /* Rouge */
+    font-weight: bold;
+}
+
+/* 🔹 Inputs */
+.quiz-page .form-control, .cours-page .form-control, .events-page .form-control {
+    border: 2px solid #007bff;
+    border-radius: 5px;
+}
+
+/* 🔹 Boutons */
+.quiz-page .btn-primary, .cours-page .btn-primary, .events-page .btn-primary {
+    background-color: #007bff;
+    border: none;
+    font-weight: bold;
+}
+
+.quiz-page .btn-primary:hover, .cours-page .btn-primary:hover, .events-page .btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/* 🔹 Liens */
+.quiz-page a, .cours-page a, .events-page a {
+    color: #007bff;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.quiz-page a:hover, .cours-page a:hover, .events-page a:hover {
+    color: #0056b3;
+}
+/* Style général pour la section */
+section {
+    padding: 60px 0;
+    background-color: #f8f9fa; /* Gris clair pour une meilleure lisibilité */
+}
+
+/* Style des conteneurs */
+.container {
+    max-width: 1200px;
+}
+
+/* Style des titres */
+h2.display-4 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #d32f2f; /* Rouge foncé pour rappeler le thème médical/cardio */
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Style des paragraphes */
+p {
+    font-size: 1.1rem;
+    color: #333;
+    line-height: 1.6;
+    text-align: justify;
+}
+
+/* Style des images */
+.img-fluid {
+    width: 100%;
+    max-width: 400px; /* Taille max pour éviter les images trop grandes */
+    height: auto;
+    border-radius: 50%; /* Cercle pour une touche esthétique */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out;
+}
+
+.img-fluid:hover {
+    transform: scale(1.05); /* Légère animation au survol */
+}
+
+/* Alignement pour les sections impaires */
+.order-lg-1 {
+    text-align: left;
+}
+
+.order-lg-2 {
+    text-align: right;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    h2.display-4 {
+        font-size: 2rem;
+    }
+
+    p {
+        font-size: 1rem;
+    }
+
+    .img-fluid {
+        max-width: 300px;
+    }
+
+    .order-lg-1,
+    .order-lg-2 {
+        text-align: center;
+    }
+}
+
+/* Style général pour la section */
+section {
+    padding: 60px 0;
+    background-color: #f8f9fa; /* Gris clair pour une meilleure lisibilité */
+}
+
+/* Style des conteneurs */
+.container {
+    max-width: 1200px;
+}
+
+/* Style des titres */
+h2.display-4 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #d32f2f; /* Rouge foncé pour rappeler le thème médical/cardio */
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Style des paragraphes */
+p {
+    font-size: 1.1rem;
+    color: #333;
+    line-height: 1.6;
+    text-align: justify;
+}
+
+/* Style des images */
+.img-fluid {
+    width: 100%;
+    max-width: 400px; /* Taille max pour éviter les images trop grandes */
+    height: auto;
+    border-radius: 50%; /* Cercle pour une touche esthétique */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out;
+}
+
+.img-fluid:hover {
+    transform: scale(1.05); /* Légère animation au survol */
+}
+
+/* Alignement pour les sections impaires */
+.order-lg-1 {
+    text-align: left;
+}
+
+.order-lg-2 {
+    text-align: right;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    h2.display-4 {
+        font-size: 2rem;
+    }
+
+    p {
+        font-size: 1rem;
+    }
+
+    .img-fluid {
+        max-width: 300px;
+    }
+
+    .order-lg-1,
+    .order-lg-2 {
+        text-align: center;
+    }
+}
+
