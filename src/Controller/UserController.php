@@ -4,43 +4,126 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
+use App\Form\UserType22;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 #[Route('/user')]
 final class UserController extends AbstractController
 {
     #[Route(name: 'app_user_index', methods: ['GET'])]
-    public function index(UserRepository $userRepository): Response
+    public function index(UserRepository $userRepository, PaginatorInterface $paginator, Request $request): Response
     {
+        $query = $userRepository->createQueryBuilder('u')->getQuery();
+    
+        $users = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1), // Numéro de la page actuelle
+            5 // Nombre d'éléments par page
+        );
+    
         return $this->render('user/index.html.twig', [
-            'users' => $userRepository->findAll(),
+            'users' => $users,
         ]);
     }
 
+   
+
+
+
     #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
+            // Hashing the password before saving
+            $hashedPassword = $passwordHasher->hashPassword(
+                $user,
+                $user->getPassword()
+            );
+            $user->setPassword($hashedPassword);
+    
             $entityManager->persist($user);
             $entityManager->flush();
-
+    
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
         }
-
+    
         return $this->render('user/new.html.twig', [
             'user' => $user,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
+
+
+    #[Route('/login', name: 'app_user_login', methods: ['GET', 'POST'])]
+public function login(Request $request, AuthenticationUtils $authenticationUtils, Security $security): Response
+{
+    // If the user is already logged in, redirect to 'app_user_index'
+    // if ($security->getUser()) {
+    //     return $this->redirectToRoute('app_user_index');
+    // }
+
+    // Get the login error if there is one
+    $error = $authenticationUtils->getLastAuthenticationError();
+
+    // Last username entered by the user
+    $lastUsername = $authenticationUtils->getLastUsername();
+
+    return $this->render('user/login.html.twig', [
+        'last_username' => $lastUsername,
+        'error' => $error,
+    ]);
+    
+}
+
+
+
+
+
+    #[Route('/signup', name: 'app_user_signup', methods: ['GET', 'POST'])]
+public function signup(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): Response
+{
+    $user = new User();
+    $form = $this->createForm(UserType22::class, $user);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        // Hashing the password before saving
+        $hashedPassword = $passwordHasher->hashPassword(
+            $user,
+            $user->getPassword()
+        );
+        $user->setPassword($hashedPassword);
+
+        // Set the default role to ROLE_CLIENT
+        $user->setRole('ROLE_CLIENT');
+
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_user_login', [], Response::HTTP_SEE_OTHER);
+    }
+
+    return $this->render('user/signup.html.twig', [
+        'user' => $user,
+        'form' => $form->createView(),
+    ]);
+}
+
+
+
 
     #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
     public function show(User $user): Response

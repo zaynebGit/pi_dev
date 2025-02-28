@@ -8,11 +8,12 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class UserType extends AbstractType
+class UserType22 extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -60,16 +61,8 @@ class UserType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('role', ChoiceType::class, [
-                'label' => 'User Role',
-                'choices'  => [
-                    'ADMIN' => 'ROLE_ADMIN',
-                    'Client' => 'ROLE_CLIENT',
-                ],
-                'expanded' => false,
-                'multiple' => false,
-                'attr' => ['class' => 'form-select'],
-                'required' => true,
+            ->add('role', HiddenType::class, [
+                'data' => 'ROLE_CLIENT',  // Set default value for the role
             ]);
     }
 
