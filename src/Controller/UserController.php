@@ -23,19 +23,19 @@ final class UserController extends AbstractController
     public function index(UserRepository $userRepository, PaginatorInterface $paginator, Request $request): Response
     {
         $query = $userRepository->createQueryBuilder('u')->getQuery();
-    
+
         $users = $paginator->paginate(
             $query,
             $request->query->getInt('page', 1), // Numéro de la page actuelle
             5 // Nombre d'éléments par page
         );
-    
+
         return $this->render('user/index.html.twig', [
             'users' => $users,
         ]);
     }
 
-   
+
 
 
 
@@ -45,7 +45,7 @@ final class UserController extends AbstractController
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
-    
+
         if ($form->isSubmitted() && $form->isValid()) {
             // Hashing the password before saving
             $hashedPassword = $passwordHasher->hashPassword(
@@ -53,13 +53,13 @@ final class UserController extends AbstractController
                 $user->getPassword()
             );
             $user->setPassword($hashedPassword);
-    
+
             $entityManager->persist($user);
             $entityManager->flush();
-    
+
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
         }
-    
+
         return $this->render('user/new.html.twig', [
             'user' => $user,
             'form' => $form->createView(),
@@ -68,59 +68,63 @@ final class UserController extends AbstractController
 
 
     #[Route('/login', name: 'app_user_login', methods: ['GET', 'POST'])]
-public function login(Request $request, AuthenticationUtils $authenticationUtils, Security $security): Response
-{
-    // If the user is already logged in, redirect to 'app_user_index'
-    // if ($security->getUser()) {
-    //     return $this->redirectToRoute('app_user_index');
-    // }
+    public function login(Request $request, AuthenticationUtils $authenticationUtils, Security $security): Response
+    {
+        // If the user is already logged in, redirect to 'app_user_index'
+        // if ($security->getUser()) {
+        //     return $this->redirectToRoute('app_user_index');
+        // }
+        //dd($security->isGranted('ROLE_CLIENT'));
+            
+        if ($security->isGranted('ROLE_CLIENT')) {
+            return $this->redirectToRoute('app_user_index');
+        }
 
-    // Get the login error if there is one
-    $error = $authenticationUtils->getLastAuthenticationError();
+        // Get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
 
-    // Last username entered by the user
-    $lastUsername = $authenticationUtils->getLastUsername();
+        // Last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
 
-    return $this->render('user/login.html.twig', [
-        'last_username' => $lastUsername,
-        'error' => $error,
-    ]);
-    
-}
+        return $this->render('user/login.html.twig', [
+            'last_username' => $lastUsername,
+            'error' => $error,
+        ]);
+    }
 
 
 
 
 
     #[Route('/signup', name: 'app_user_signup', methods: ['GET', 'POST'])]
-public function signup(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): Response
-{
-    $user = new User();
-    $form = $this->createForm(UserType22::class, $user);
-    $form->handleRequest($request);
+    public function signup(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): Response
+    {
+        $user = new User();
+        $form = $this->createForm(UserType22::class, $user);
+        $form->handleRequest($request);
 
-    if ($form->isSubmitted() && $form->isValid()) {
-        // Hashing the password before saving
-        $hashedPassword = $passwordHasher->hashPassword(
-            $user,
-            $user->getPassword()
-        );
-        $user->setPassword($hashedPassword);
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Hashing the password before saving
+            $hashedPassword = $passwordHasher->hashPassword(
+                $user,
+                $user->getPassword()
+            );
+            $user->setPassword($hashedPassword);
 
-        // Set the default role to ROLE_CLIENT
-        $user->setRole('ROLE_CLIENT');
+            // Set the default role to ROLE_CLIENT
+            $user->setRole('ROLE_CLIENT');
 
-        $entityManager->persist($user);
-        $entityManager->flush();
+            $entityManager->persist($user);
+            $entityManager->flush();
 
-        return $this->redirectToRoute('app_user_login', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_user_login', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('user/signup.html.twig', [
+            'user' => $user,
+            'form' => $form->createView(),
+        ]);
     }
-
-    return $this->render('user/signup.html.twig', [
-        'user' => $user,
-        'form' => $form->createView(),
-    ]);
-}
 
 
 
@@ -154,7 +158,7 @@ public function signup(Request $request, UserPasswordHasherInterface $passwordHa
     #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($user);
             $entityManager->flush();
         }
