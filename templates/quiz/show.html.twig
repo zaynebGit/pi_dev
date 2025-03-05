@@ -1,0 +1,70 @@
+{% extends 'index.html.twig' %}
+
+{% block title %}Quiz Details{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h1 class="h4 mb-0">Quiz Details</h1>
+        </div>
+        <div class="card-body">
+            <!-- Quiz Details Table -->
+            <table class="table table-bordered table-hover">
+                <tbody>
+                    <tr>
+                        <th class="bg-light">ID</th>
+                        <td>{{ quiz.id }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Matiere</th>
+                        <td>{{ quiz.Matiere }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Question 1</th>
+                        <td>{{ quiz.quest1 }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Question 2</th>
+                        <td>{{ quiz.quest2 }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Question 3</th>
+                        <td>{{ quiz.quest3 }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Correct Answer 1</th>
+                        <td>{{ quiz.correctAnswer1 }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Correct Answer 2</th>
+                        <td>{{ quiz.correctAnswer2 }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Correct Answer 3</th>
+                        <td>{{ quiz.correctAnswer3 }}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Difficulty</th>
+                        <td>{{ quiz.diff }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer bg-light">
+            <div class="d-flex justify-content-between align-items-center">
+                <!-- Back to List Link -->
+                <a href="{{ path('app_quiz_index') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to List
+                </a>
+                <!-- Edit Link -->
+                <a href="{{ path('app_quiz_edit', {'id': quiz.id}) }}" class="btn btn-outline-primary">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+                <!-- Delete Form -->
+                {{ include('quiz/_delete_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

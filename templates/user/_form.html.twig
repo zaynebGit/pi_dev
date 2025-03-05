@@ -17,11 +17,11 @@
         {{ form_errors(form.password) }}
     </div>
 
-    <div class="mb-3">
+    {# <div class="mb-3">
         {{ form_label(form.role, null, {'label_attr': {'class': 'form-label'}}) }}
         {{ form_widget(form.role, {'attr': {'class': 'form-select'}}) }}
         {{ form_errors(form.role) }}
-    </div>
+    </div> #}
 
     <button class="btn btn-primary">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}

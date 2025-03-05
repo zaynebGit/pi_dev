@@ -1,0 +1,26 @@
+{% extends 'index.html.twig' %}
+
+{% block title %}Créer un Nouveau Quiz{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+
+            <div class="text-center mb-4">
+                <h1 class="display-5">📝 Créer un Nouveau Quiz</h1>
+                <p class="text-muted">Remplissez les informations ci-dessous pour ajouter un nouveau quiz.</p>
+            </div>
+
+            {{ include('quiz/_form.html.twig') }}
+
+            <div class="text-center mt-4">
+                <a href="{{ path('app_quiz_index') }}" class="btn btn-outline-secondary">
+                    ← Retour à la liste des Quiz
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

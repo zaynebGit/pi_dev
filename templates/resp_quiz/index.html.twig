@@ -1,0 +1,89 @@
+{% extends 'index.html.twig' %}
+
+{% block title %}RespQuiz Index{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h1 class="h4 mb-0">RespQuiz Index</h1>
+        </div>
+        <div class="card-body">
+            <!-- Create New Button -->
+            <div class="mb-4">
+                <a href="{{ path('app_resp_quiz_new') }}" class="btn btn-success">
+                    <i class="fas fa-plus"></i> Create New
+                </a>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="mb-4">
+                <input type="text" id="searchInput" class="form-control" placeholder="Search by User Answer, Rate, or Score...">
+            </div>
+
+            <!-- RespQuiz Table -->
+            <table class="table table-bordered table-hover" id="respQuizTable">
+                <thead class="bg-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>User Answer 1</th>
+                        <th>User Answer 2</th>
+                        <th>User Answer 3</th>
+                        <th>Submitted At</th>
+                        <th>Rate</th>
+                        <th>Score</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for resp_quiz in resp_quizzes %}
+                        <tr>
+                            <td>{{ resp_quiz.id }}</td>
+                            <td>{{ resp_quiz.userAnswer1 }}</td>
+                            <td>{{ resp_quiz.userAnswer2 }}</td>
+                            <td>{{ resp_quiz.userAnswer3 }}</td>
+                            <td>{{ resp_quiz.submittedAt ? resp_quiz.submittedAt|date('Y-m-d H:i:s') : '' }}</td>
+                            <td>{{ resp_quiz.rate }}</td>
+                            <td>{{ resp_quiz.score }}</td>
+                            <td>
+                                <a href="{{ path('app_resp_quiz_show', {'id': resp_quiz.id}) }}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-eye"></i> Show
+                                </a>
+                                <a href="{{ path('app_resp_quiz_edit', {'id': resp_quiz.id}) }}" class="btn btn-sm btn-outline-warning">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="8" class="text-center">No records found</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Dynamic Search -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('searchInput');
+        const tableRows = document.querySelectorAll('#respQuizTable tbody tr');
+
+        searchInput.addEventListener('input', function () {
+            const searchTerm = this.value.toLowerCase(); // Get search term in lowercase
+
+            tableRows.forEach(row => {
+                const rowData = row.textContent.toLowerCase(); // Get row content in lowercase
+
+                if (rowData.includes(searchTerm)) {
+                    row.style.display = ''; // Show row if it matches the search term
+                } else {
+                    row.style.display = 'none'; // Hide row if it doesn't match
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

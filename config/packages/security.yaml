@@ -19,12 +19,16 @@ security:
             lazy: true
             provider: app_user_provider
 
+            logout:
+                path: app_user_logout
+                target: app_user_login  # Redirect to login after logout
+
             # Enable login form authentication
             form_login:
                 login_path: app_user_login
                 check_path: app_user_login
-                default_target_path: app_user_index # Redirect to 'app_user_index' after successful login
-                always_use_default_target_path: true
+                default_target_path: app_quiz_indexFront # Redirect to 'app_user_index' after successful login
+                always_use_default_target_path: false
 
             # Uncomment below to enable user impersonation
             # switch_user: true

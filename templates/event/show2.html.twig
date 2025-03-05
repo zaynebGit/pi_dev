@@ -1,0 +1,47 @@
+{% extends 'baseMochmrigl.html.twig' %}
+
+{% block title %}Event Details{% endblock %}
+
+{% block body2 %}
+    <div class="container" style="margin:150px">
+        <h1 class="mb-4">Event Details</h1>
+
+        <div class="card shadow">
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-3 fw-bold">ID:</div>
+                    <div class="col-md-9">{{ event.id }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-3 fw-bold">Name:</div>
+                    <div class="col-md-9">{{ event.name }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-3 fw-bold">Description:</div>
+                    <div class="col-md-9">{{ event.description }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-3 fw-bold">Date:</div>
+                    <div class="col-md-9">{{ event.date ? event.date|date('Y-m-d H:i:s') : 'N/A' }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-3 fw-bold">Location:</div>
+                    <div class="col-md-9">{{ event.location }}</div>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent">
+                <div class="d-flex justify-content-between">
+                    <a href="{{ path('app_event_index2') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to List
+                    </a>
+                    {# <div>
+                        <a href="{{ path('app_event_edit', {'id': event.id}) }}" class="btn btn-primary">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        {{ include('event/_delete_form.html.twig') }}
+                    </div> #}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -67,30 +67,39 @@ final class UserController extends AbstractController
     }
 
 
-    #[Route('/login', name: 'app_user_login', methods: ['GET', 'POST'])]
-    public function login(Request $request, AuthenticationUtils $authenticationUtils, Security $security): Response
-    {
-        // If the user is already logged in, redirect to 'app_user_index'
-        // if ($security->getUser()) {
-        //     return $this->redirectToRoute('app_user_index');
-        // }
-        //dd($security->isGranted('ROLE_CLIENT'));
-            
-        if ($security->isGranted('ROLE_CLIENT')) {
-            return $this->redirectToRoute('app_user_index');
+    #[Route('/logout', name: 'app_user_logout', methods: ['GET'])]
+        public function logout(): Response
+        {
+            return $this->redirectToRoute('app_user_login');
         }
 
-        // Get the login error if there is one
-        $error = $authenticationUtils->getLastAuthenticationError();
+    
 
-        // Last username entered by the user
-        $lastUsername = $authenticationUtils->getLastUsername();
-
-        return $this->render('user/login.html.twig', [
-            'last_username' => $lastUsername, 
-            'error' => $error,
-        ]);
-    }
+        #[Route('/login', name: 'app_user_login', methods: ['GET', 'POST'])]
+        public function login(Request $request, AuthenticationUtils $authenticationUtils, Security $security): Response
+        {
+            // Check if the user is already logged in
+            if ($security->getUser()) {
+                // Redirect based on the user's role
+                if ($security->isGranted('ROLE_ADMIN')) {
+                    return $this->redirectToRoute('app_user_index');
+                } elseif ($security->isGranted('ROLE_CLIENT')) {
+                    return $this->redirectToRoute('app_quiz_indexFront'); 
+                }
+            }
+        
+            // Get the login error if there is one
+            $error = $authenticationUtils->getLastAuthenticationError();
+        
+            // Last username entered by the user
+            $lastUsername = $authenticationUtils->getLastUsername();
+        
+            return $this->render('user/login.html.twig', [
+                'last_username' => $lastUsername,
+                'error' => $error,
+            ]);
+        }
+        
 
 
 
