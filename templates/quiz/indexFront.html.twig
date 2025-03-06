@@ -5,7 +5,7 @@
 {% block body %}
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="display-5">📋 Liste des Quiz</h1>
+        <h1 class="display-5 fw-bold">📋 Liste des Quiz</h1>
         <!-- Difficulty Filter Dropdown -->
         <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="difficultyFilter" data-bs-toggle="dropdown" aria-expanded="false">
@@ -24,10 +24,10 @@
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="quizContainer">
             {% for quiz in quizzes %}
                 <div class="col" data-diff="{{ quiz.diff }}">
-                    <div class="card shadow-sm h-100">
+                    <div class="card shadow-sm h-100 border-0">
                         <div class="card-body">
-                            <h5 class="card-title">{{ quiz.Matiere }}</h5>
-                            <h6>
+                            <h5 class="card-title fw-bold">{{ quiz.Matiere }}</h5>
+                            <h6 class="mb-3">
                                 {% if quiz.diff == 'easy' %}
                                     <span class="badge bg-success">Facile</span>
                                 {% elseif quiz.diff == 'medium' %}
@@ -38,16 +38,20 @@
                                     <span class="badge bg-secondary">Inconnu</span>
                                 {% endif %}
                             </h6>
-                            <hr>
-                            <p><strong>Question 1:</strong> {{ quiz.quest1 }}</p>
-                            <p><strong>Question 2:</strong> {{ quiz.quest2 }}</p>
-                            <p><strong>Question 3:</strong> {{ quiz.quest3 }}</p>
-                            <p><strong>Bonne Rép. 1:</strong> {{ quiz.correctAnswer1 }}</p>
-                            <p><strong>Bonne Rép. 2:</strong> {{ quiz.correctAnswer2 }}</p>
-                            <p><strong>Bonne Rép. 3:</strong> {{ quiz.correctAnswer3 }}</p>
+                            <hr class="my-3">
+                            <div class="quiz-questions">
+                                <p class="mb-2"><strong>Question 1:</strong> {{ quiz.quest1 }}</p>
+                                <p class="mb-2"><strong>Question 2:</strong> {{ quiz.quest2 }}</p>
+                                <p class="mb-2"><strong>Question 3:</strong> {{ quiz.quest3 }}</p>
+                            </div>
                         </div>
-                        <div class="card-footer d-flex justify-content-between">
+                        <div class="card-footer bg-transparent border-0 d-flex justify-content-between align-items-center">
                             <a href="{{ path('app_quiz_answer', {'id': quiz.id}) }}" class="btn btn-outline-warning btn-sm">✏️ Answer Quizz</a>
+                            <div id="qr-code-{{ quiz.id }}" class="qr-code"
+                                 data-answer1="{{ quiz.correctAnswer1 }}"
+                                 data-answer2="{{ quiz.correctAnswer2 }}"
+                                 data-answer3="{{ quiz.correctAnswer3 }}">
+                            </div> <!-- QR Code Placeholder with Data Attributes -->
                         </div>
                     </div>
                 </div>
@@ -60,9 +64,11 @@
     {% endif %}
 </div>
 
-<!-- JavaScript for Filtering -->
+<!-- JavaScript for Filtering and QR Code Generation -->
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        // Filtering Logic
         const dropdownItems = document.querySelectorAll('.dropdown-item');
         const quizContainer = document.getElementById('quizContainer');
 
@@ -83,9 +89,69 @@
                 });
             });
         });
+
+        // QR Code Generation
+        const quizCards = document.querySelectorAll('.col'); // Get all quiz cards
+
+        quizCards.forEach(card => {
+            const qrCodeDiv = card.querySelector('.qr-code'); // Get QR code placeholder
+
+            // Retrieve quiz answers from data attributes
+            const answer1 = qrCodeDiv.getAttribute('data-answer1');
+            const answer2 = qrCodeDiv.getAttribute('data-answer2');
+            const answer3 = qrCodeDiv.getAttribute('data-answer3');
+
+            // Create a custom string with the answers
+            const quizAnswers = `
+                Correct Answers:
+                - Question 1: ${answer1}
+                - Question 2: ${answer2}
+                - Question 3: ${answer3}
+            `;
+
+            // Create a canvas element for the QR code
+            const canvas = document.createElement('canvas');
+            qrCodeDiv.appendChild(canvas); // Append the canvas to the QR code container
+
+            // Generate QR code with the custom string
+            QRCode.toCanvas(canvas, quizAnswers, { width: 100 }, function (error) {
+                if (error) console.error(error);
+            });
+        });
     });
 </script>
+
+<!-- Custom CSS for Modern Look -->
+<style>
+    .card {
+        border-radius: 15px;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .quiz-questions p {
+        font-size: 0.9rem;
+        color: #555;
+    }
+
+    .qr-code canvas {
+        border-radius: 10px;
+        border: 1px solid #ddd;
+    }
+
+    .btn-outline-warning {
+        border-radius: 20px;
+        padding: 5px 15px;
+    }
+
+    .badge {
+        font-size: 0.85rem;
+        padding: 5px 10px;
+        border-radius: 10px;
+    }
+</style>
 {% endblock %}
-
-
-

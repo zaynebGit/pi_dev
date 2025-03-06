@@ -10,15 +10,28 @@
         </div>
         <div class="card-body">
             <!-- Create New Button -->
-            <div class="mb-4">
+            {# <div class="mb-4">
                 <a href="{{ path('app_resp_quiz_new') }}" class="btn btn-success">
                     <i class="fas fa-plus"></i> Create New
                 </a>
-            </div>
+            </div> #}
 
-            <!-- Search Bar -->
-            <div class="mb-4">
-                <input type="text" id="searchInput" class="form-control" placeholder="Search by User Answer, Rate, or Score...">
+            <!-- Search Bar and Sort Dropdown -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Search by User Answer, Rate, or Score...">
+                </div>
+                <div class="col-md-6">
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="sortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            Sort by Submitted At
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="sortDropdown">
+                            <li><a class="dropdown-item" href="#" data-sort="asc">Oldest First</a></li>
+                            <li><a class="dropdown-item" href="#" data-sort="desc">Newest First</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
 
             <!-- RespQuiz Table -->
@@ -37,7 +50,7 @@
                 </thead>
                 <tbody>
                     {% for resp_quiz in resp_quizzes %}
-                        <tr>
+                        <tr data-submitted-at="{{ resp_quiz.submittedAt ? resp_quiz.submittedAt|date('Y-m-d H:i:s') : '' }}">
                             <td>{{ resp_quiz.id }}</td>
                             <td>{{ resp_quiz.userAnswer1 }}</td>
                             <td>{{ resp_quiz.userAnswer2 }}</td>
@@ -65,12 +78,14 @@
     </div>
 </div>
 
-<!-- JavaScript for Dynamic Search -->
+<!-- JavaScript for Dynamic Search and Sorting -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const searchInput = document.getElementById('searchInput');
         const tableRows = document.querySelectorAll('#respQuizTable tbody tr');
+        const sortDropdownItems = document.querySelectorAll('.dropdown-item[data-sort]');
 
+        // Search Functionality
         searchInput.addEventListener('input', function () {
             const searchTerm = this.value.toLowerCase(); // Get search term in lowercase
 
@@ -82,6 +97,32 @@
                 } else {
                     row.style.display = 'none'; // Hide row if it doesn't match
                 }
+            });
+        });
+
+        // Sorting Functionality
+        sortDropdownItems.forEach(item => {
+            item.addEventListener('click', function (e) {
+                e.preventDefault(); // Prevent default link behavior
+
+                const sortOrder = this.getAttribute('data-sort'); // Get sort order (asc or desc)
+                const rows = Array.from(tableRows); // Convert NodeList to Array for sorting
+
+                rows.sort((a, b) => {
+                    const dateA = new Date(a.getAttribute('data-submitted-at'));
+                    const dateB = new Date(b.getAttribute('data-submitted-at'));
+
+                    if (sortOrder === 'asc') {
+                        return dateA - dateB; // Sort ascending
+                    } else {
+                        return dateB - dateA; // Sort descending
+                    }
+                });
+
+                // Reorder the table rows
+                const tbody = document.querySelector('#respQuizTable tbody');
+                tbody.innerHTML = ''; // Clear existing rows
+                rows.forEach(row => tbody.appendChild(row)); // Append sorted rows
             });
         });
     });

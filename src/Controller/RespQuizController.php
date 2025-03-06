@@ -14,6 +14,10 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/resp/quiz')]
 final class RespQuizController extends AbstractController
 {
+
+
+    //hedhi lista taaa response quiz fil back 
+
     #[Route(name: 'app_resp_quiz_index', methods: ['GET'])]
     public function index(RespQuizRepository $respQuizRepository): Response
     {
@@ -21,6 +25,9 @@ final class RespQuizController extends AbstractController
             'resp_quizzes' => $respQuizRepository->findAll(),
         ]);
     }
+
+    //hedhi reponse taaa quiz fil back 
+
 
     #[Route('/new', name: 'app_resp_quiz_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
@@ -42,6 +49,10 @@ final class RespQuizController extends AbstractController
         ]);
     }
 
+
+    //hedhi show taa quiz fil back 
+
+
     #[Route('/{id}', name: 'app_resp_quiz_show', methods: ['GET'])]
     public function show(RespQuiz $respQuiz): Response
     {
@@ -49,6 +60,10 @@ final class RespQuizController extends AbstractController
             'resp_quiz' => $respQuiz,
         ]);
     }
+
+
+
+    //hedhi edit taaa reponse quiz fil back 
 
     #[Route('/{id}/edit', name: 'app_resp_quiz_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, RespQuiz $respQuiz, EntityManagerInterface $entityManager): Response
@@ -67,6 +82,10 @@ final class RespQuizController extends AbstractController
             'form' => $form,
         ]);
     }
+
+
+
+    //hedhi delete
 
     #[Route('/{id}', name: 'app_resp_quiz_delete', methods: ['POST'])]
     public function delete(Request $request, RespQuiz $respQuiz, EntityManagerInterface $entityManager): Response

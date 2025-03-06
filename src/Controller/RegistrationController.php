@@ -12,10 +12,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Service\TwilioService; 
+
 
 #[Route('/registration')]
 final class RegistrationController extends AbstractController
 {
+
+
+
+    //hedhi ilista taa registration back
+
     #[Route(name: 'app_registration_index', methods: ['GET'])]
     public function index(RegistrationRepository $registrationRepository, EventRepository $eventRepository): Response
     {
@@ -32,9 +39,9 @@ final class RegistrationController extends AbstractController
     }
 
     
-
+//hedhiii ajouter registration fi event ml back 
     #[Route('/new', name: 'app_registration_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, TwilioService $twilioService): Response
     {
         $registration = new Registration();
         $form = $this->createForm(RegistrationType::class, $registration);
@@ -43,6 +50,9 @@ final class RegistrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($registration);
             $entityManager->flush();
+
+            // Envoi du SMS après l'inscription
+            $twilioService->sendSms('+21692491367', 'Nouvelle inscription confirmée !');
 
             return $this->redirectToRoute('app_registration_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -53,8 +63,9 @@ final class RegistrationController extends AbstractController
         ]);
     }
 
-    #[Route('/registration/new/{id}',name: 'app_registration_newfront', methods: ['GET','POST'])]
-    public function registreFront(Request $request, EntityManagerInterface $entityManager, EventRepository $eventRepository, $id): Response
+//registration fi event  ml front 
+    #[Route('/registration/new/{id}', name: 'app_registration_newfront', methods: ['GET', 'POST'])]
+public function registreFront(Request $request, EntityManagerInterface $entityManager, EventRepository $eventRepository, $id, TwilioService $twilioService): Response
 {
     $event = $eventRepository->find($id);
     if (!$event) {
@@ -62,22 +73,39 @@ final class RegistrationController extends AbstractController
     }
 
     $registration = new Registration();
-    $registration->setEvent($event); // Set the event directly
+    $registration->setEvent($event);
 
     $form = $this->createForm(RegistrationType::class, $registration);
-
     $form->handleRequest($request);
+
     if ($form->isSubmitted() && $form->isValid()) {
         $entityManager->persist($registration);
         $entityManager->flush();
 
-        return $this->redirectToRoute('app_event_index2'); // Redirect after saving
+        // Format event date
+        $eventDate = $event->getDate()->format('d-m-Y H:i');
+
+        // Create SMS message
+        $message = sprintf(
+            "Nouvelle inscription confirmée !\nNom: %s\nÉvénement: %s\nDescription: %s\nDate: %s\nLieu: %s",
+            $registration->getName(),
+            $event->getName(),
+            $event->getDescription(),
+            $eventDate,
+            $event->getLocation()
+        );
+
+        // Send SMS via Twilio
+        $twilioService->sendSms('+21692491367', $message);
+
+        return $this->redirectToRoute('app_event_index2');
     }
 
     return $this->render('registration/newFront.html.twig', [
         'form' => $form->createView(),
     ]);
 }
+
 
 
 

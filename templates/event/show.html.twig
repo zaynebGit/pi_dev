@@ -2,6 +2,16 @@
 
 {% block title %}Event Details{% endblock %}
 
+{% block head %}
+    {{ parent() }}
+    <!-- Open Graph Meta Tags for Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ event.name }}">
+    <meta property="og:description" content="{{ event.description }}">
+    <meta property="og:image" content="{{ asset('images/event_image.jpg') | join('/', [app.request.schemeAndHttpHost, asset('images/event_image.jpg')]) }}">
+    <meta property="og:url" content="{{ app.request.schemeAndHttpHost ~ path('app_event_show', {'id': event.id}) }}">
+{% endblock %}
+
 {% block body %}
     <div class="container mt-5">
         <div class="card shadow-lg p-4">
@@ -39,10 +49,15 @@
                 <a href="{{ path('app_event_edit', {'id': event.id}) }}" class="btn btn-warning">
                     <i class="fas fa-edit"></i> Edit
                 </a>
-                {# <a href="{{ path('app_event_register', {'id': event.id}) }}" class="btn btn-primary">
-                    <i class="fas fa-user-plus"></i> Register
-                </a> #}
                 {{ include('event/_delete_form.html.twig') }}
+            </div>
+
+            <!-- Facebook Share Button -->
+            <div class="mt-4 text-center">
+                <a href="https://www.facebook.com/sharer/sharer.php?u={{ app.request.schemeAndHttpHost ~ path('app_event_show', {'id': event.id}) }}" 
+                   class="btn btn-primary btn-sm" target="_blank">
+                    <i class="fab fa-facebook-f"></i> Share on Facebook
+                </a>
             </div>
         </div>
     </div>

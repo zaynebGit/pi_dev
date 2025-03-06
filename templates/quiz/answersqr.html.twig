@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réponses du Quiz{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="display-5 mb-4">Réponses du Quiz: {{ quiz.Matiere }}</h1>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <p><strong>Question 1:</strong> {{ quiz.quest1 }}</p>
+            <p><strong>Bonne Réponse 1:</strong> {{ quiz.correctAnswer1 }}</p>
+            <hr>
+            <p><strong>Question 2:</strong> {{ quiz.quest2 }}</p>
+            <p><strong>Bonne Réponse 2:</strong> {{ quiz.correctAnswer2 }}</p>
+            <hr>
+            <p><strong>Question 3:</strong> {{ quiz.quest3 }}</p>
+            <p><strong>Bonne Réponse 3:</strong> {{ quiz.correctAnswer3 }}</p>
+        </div>
+    </div>
+    <a href="{{ path('app_quiz_indexFront') }}" class="btn btn-secondary mt-3">
+        <i class="fas fa-arrow-left"></i> Retour à la liste des quiz
+    </a>
+</div>
+{% endblock %}

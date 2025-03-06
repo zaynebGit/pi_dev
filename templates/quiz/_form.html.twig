@@ -1,4 +1,54 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_start(form, { attr: { class: 'needs-validation', novalidate: 'novalidate' } }) }}
+    <div class="card shadow-sm p-4 bg-white rounded">
+        
+        <h2 class="mb-4 text-center">Informations du Quiz</h2>
+
+        <div class="mb-3">
+            {{ form_label(form.Matiere, 'Matière', { 'label_attr': {'class': 'form-label'} }) }}
+            {{ form_widget(form.Matiere, { 'attr': {'class': 'form-control', 'placeholder': 'Entrez la matière'} }) }}
+        </div>
+
+        <hr>
+
+        <h4 class="mt-4">Questions</h4>
+
+        <div class="mb-3">
+            {{ form_label(form.quest1, 'Question 1', { 'label_attr': {'class': 'form-label'} }) }}
+            {{ form_widget(form.quest1, { 'attr': {'class': 'form-control', 'placeholder': 'Entrez la première question'} }) }}
+        </div>
+        <div class="mb-3">
+            {{ form_label(form.correctAnswer1, 'Réponse correcte 1', { 'label_attr': {'class': 'form-label'} }) }}
+            {{ form_widget(form.correctAnswer1, { 'attr': {'class': 'form-control', 'placeholder': 'Entrez la bonne réponse'} }) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.quest2, 'Question 2', { 'label_attr': {'class': 'form-label'} }) }}
+            {{ form_widget(form.quest2, { 'attr': {'class': 'form-control', 'placeholder': 'Entrez la deuxième question'} }) }}
+        </div>
+        <div class="mb-3">
+            {{ form_label(form.correctAnswer2, 'Réponse correcte 2', { 'label_attr': {'class': 'form-label'} }) }}
+            {{ form_widget(form.correctAnswer2, { 'attr': {'class': 'form-control', 'placeholder': 'Entrez la bonne réponse'} }) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.quest3, 'Question 3', { 'label_attr': {'class': 'form-label'} }) }}
+            {{ form_widget(form.quest3, { 'attr': {'class': 'form-control', 'placeholder': 'Entrez la troisième question'} }) }}
+        </div>
+        <div class="mb-3">
+            {{ form_label(form.correctAnswer3, 'Réponse correcte 3', { 'label_attr': {'class': 'form-label'} }) }}
+            {{ form_widget(form.correctAnswer3, { 'attr': {'class': 'form-control', 'placeholder': 'Entrez la bonne réponse'} }) }}
+        </div>
+
+       
+
+        <div class="mb-3">
+            {{ form_label(form.diff, 'Difficulté', { 'label_attr': {'class': 'form-label'} }) }}
+            {{ form_widget(form.diff, { 'attr': {'class': 'form-select'} }) }}
+        </div>
+
+        <div class="mt-4 text-center">
+            <button class="btn btn-success">{{ button_label|default('Enregistrer') }}</button>
+        </div>
+
+    </div>
 {{ form_end(form) }}

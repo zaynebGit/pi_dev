@@ -13,10 +13,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use GuzzleHttp\Client;
 
 #[Route('/quiz')]
 final class QuizController extends AbstractController
 {
+
+
+
+    //hedhi lista taaa quiz fil back 
+
     #[Route(name: 'app_quiz_index', methods: ['GET'])]
     public function index(QuizRepository $quizRepository): Response
     {
@@ -25,6 +31,34 @@ final class QuizController extends AbstractController
         ]);
     }
 
+
+
+
+//hedhi joke api 
+
+
+    private function fetchRandomJoke(): ?string
+{
+    $client = new Client();
+    try {
+        // Fetch a random joke from the API
+        $response = $client->request('GET', 'https://official-joke-api.appspot.com/random_joke');
+        $data = json_decode($response->getBody(), true);
+
+        // Return the joke setup and punchline
+        return $data['setup'] . ' ' . $data['punchline'];
+    } catch (\Exception $e) {
+        // Handle API errors gracefully
+        return 'Could not fetch a joke at the moment. Please try again later.';
+    }
+}
+
+
+
+//hedhi lista taaa quiz fil front 
+
+
+
     #[Route('/lista', name: 'app_quiz_indexFront', methods: ['GET'])]
     public function indexfront(QuizRepository $quizRepository): Response
     {
@@ -32,6 +66,11 @@ final class QuizController extends AbstractController
             'quizzes' => $quizRepository->findAll(),
         ]);
     }
+
+
+
+
+// hedhi ajout new quiz
 
 
     #[Route('/new', name: 'app_quiz_new', methods: ['GET', 'POST'])]
@@ -53,6 +92,9 @@ final class QuizController extends AbstractController
             'form' => $form,
         ]);
     }
+
+    //hedhi reponse aaal quiz ml front 
+
 
 
     #[Route('/quiz/{id}/answer', name: 'app_quiz_answer', methods: ['GET', 'POST'])]
@@ -103,12 +145,15 @@ final class QuizController extends AbstractController
     
             // Add a success flash message
             $this->addFlash('success', 'Votre réponse a été enregistrée avec succès!');
-    
+            $joke = ($score === 3) ? $this->fetchRandomJoke() : null;
+
             // Render the same template with the updated respQuiz object
             return $this->render('quiz/answer.html.twig', [
                 'quiz' => $quiz,
                 'form' => $form->createView(),
                 'respQuiz' => $respQuiz, // Pass the updated respQuiz to the template
+                'joke' => $joke, // Pass the joke to the template
+
             ]);
         }
     
@@ -121,6 +166,12 @@ final class QuizController extends AbstractController
     }
 
 
+
+
+
+
+ //hedhi show
+
     #[Route('/{id}', name: 'app_quiz_show', methods: ['GET'])]
     public function show(Quiz $quiz): Response
     {
@@ -128,6 +179,10 @@ final class QuizController extends AbstractController
             'quiz' => $quiz,
         ]);
     }
+
+
+
+//hedhi edit 
 
     #[Route('/{id}/edit', name: 'app_quiz_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Quiz $quiz, EntityManagerInterface $entityManager): Response
@@ -146,6 +201,10 @@ final class QuizController extends AbstractController
             'form' => $form,
         ]);
     }
+
+
+
+    //hedhi delete
 
     #[Route('/{id}', name: 'app_quiz_delete', methods: ['POST'])]
     public function delete(Request $request, Quiz $quiz, EntityManagerInterface $entityManager): Response
